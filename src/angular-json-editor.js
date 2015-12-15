@@ -45,6 +45,7 @@ angular.module('angular-json-editor', []).provider('JSONEditor', function () {
         scope: {
             schema: '=',
             startval: '=',
+            document: '=',
             buttonsController: '@',
             onChange: '&'
         },
@@ -70,6 +71,17 @@ angular.module('angular-json-editor', []).provider('JSONEditor', function () {
                 schemaPromise = $q.when(null);
 
             scope.isValid = false;
+
+            Object.defineProperty(scope, 'document', {
+                get: function () {
+                    return scope.editor ? scope.editor.getValue() : {};
+                },
+                set: function (newVal) {
+                    if (scope.editor) {
+                        scope.editor.setValue(newVal);
+                    }
+                }
+            });
 
             if (!angular.isString(attrs.schema)) {
                 throw new Error('angular-json-editor: schema attribute has to be defined.');
